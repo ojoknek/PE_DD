@@ -1,111 +1,72 @@
 """
 バリュエーション指標の計算ロジック
+
+README.mdの仕様に基づく、NN_DD評価に必要なバリュエーション計算機能
 """
-from typing import Dict, Optional
+from typing import Optional
 
 
-def calculate_ev_sales_multiple(enterprise_value: float, revenue: float) -> float:
+def calculate_net_debt(
+    interest_bearing_debt: Optional[float],
+    cash_and_equivalents: Optional[float]
+) -> Optional[float]:
     """
-    EV/Sales倍率を計算
+    Net Debt（純有利子負債）を計算
+    
+    Args:
+        interest_bearing_debt: 有利子負債
+        cash_and_equivalents: 現預金
+    
+    Returns:
+        Net Debt（有利子負債−現預金）
+    """
+    if interest_bearing_debt is None:
+        return None
+    
+    if cash_and_equivalents is None:
+        cash_and_equivalents = 0.0
+    
+    return interest_bearing_debt - cash_and_equivalents
+
+
+def calculate_enterprise_value_from_ebitda(
+    adj_ebitda: Optional[float],
+    ebitda_multiple: Optional[float]
+) -> Optional[float]:
+    """
+    EBITDA倍率から企業価値（EV）を計算
+    
+    Args:
+        adj_ebitda: 調整後EBITDA
+        ebitda_multiple: EBITDA倍率
+    
+    Returns:
+        企業価値（EV）
+    """
+    if adj_ebitda is None or ebitda_multiple is None:
+        return None
+    
+    return adj_ebitda * ebitda_multiple
+
+
+def calculate_equity_value_from_ev(
+    enterprise_value: Optional[float],
+    net_debt: Optional[float]
+) -> Optional[float]:
+    """
+    企業価値（EV）から株主価値（Equity Value）を計算
     
     Args:
         enterprise_value: 企業価値（EV）
-        revenue: 売上高
+        net_debt: Net Debt
     
     Returns:
-        EV/Sales倍率
+        株主価値（Equity Value）
     """
-    if revenue == 0:
-        return 0.0
-    return enterprise_value / revenue
-
-
-def calculate_ev_ebitda_multiple(enterprise_value: float, ebitda: float) -> float:
-    """
-    EV/EBITDA倍率を計算
+    if enterprise_value is None:
+        return None
     
-    Args:
-        enterprise_value: 企業価値（EV）
-        ebitda: EBITDA
+    if net_debt is None:
+        net_debt = 0.0
     
-    Returns:
-        EV/EBITDA倍率
-    """
-    if ebitda == 0:
-        return 0.0
-    return enterprise_value / ebitda
-
-
-def calculate_pbr(market_cap: float, book_value: float) -> float:
-    """
-    PBR（株価純資産倍率）を計算
-    
-    Args:
-        market_cap: 時価総額
-        book_value: 純資産
-    
-    Returns:
-        PBR倍率
-    """
-    if book_value == 0:
-        return 0.0
-    return market_cap / book_value
-
-
-def calculate_per(market_cap: float, net_income: float) -> float:
-    """
-    PER（株価収益率）を計算
-    
-    Args:
-        market_cap: 時価総額
-        net_income: 当期純利益
-    
-    Returns:
-        PER倍率
-    """
-    if net_income == 0:
-        return 0.0
-    return market_cap / net_income
-
-
-def calculate_valuation_metrics(valuation_data: Dict) -> Dict:
-    """
-    バリュエーション指標を一括計算
-    
-    Args:
-        valuation_data: バリュエーションデータ（辞書形式）
-    
-    Returns:
-        計算結果（辞書形式）
-    """
-    results = {}
-    
-    # EV/Sales倍率計算
-    if 'enterprise_value' in valuation_data and 'revenue' in valuation_data:
-        results['ev_sales'] = calculate_ev_sales_multiple(
-            valuation_data['enterprise_value'],
-            valuation_data['revenue']
-        )
-    
-    # EV/EBITDA倍率計算
-    if 'enterprise_value' in valuation_data and 'ebitda' in valuation_data:
-        results['ev_ebitda'] = calculate_ev_ebitda_multiple(
-            valuation_data['enterprise_value'],
-            valuation_data['ebitda']
-        )
-    
-    # PBR計算
-    if 'market_cap' in valuation_data and 'book_value' in valuation_data:
-        results['pbr'] = calculate_pbr(
-            valuation_data['market_cap'],
-            valuation_data['book_value']
-        )
-    
-    # PER計算
-    if 'market_cap' in valuation_data and 'net_income' in valuation_data:
-        results['per'] = calculate_per(
-            valuation_data['market_cap'],
-            valuation_data['net_income']
-        )
-    
-    return results
+    return enterprise_value - net_debt

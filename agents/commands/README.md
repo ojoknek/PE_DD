@@ -27,6 +27,10 @@ Cursorで使用する擬似スラッシュコマンドの定義です。
 - `/deal:create` - 新規案件の作成
 - `/deal:list` - 案件一覧の表示
 - `/deal:open` - 案件の開く
+- `/deal:process [deal_name]` - 案件の自動処理（NN DD + IM DD）
+- `/deal:process_nn [deal_name]` - NN DDのみ実行
+- `/deal:process_im [deal_name]` - IM DDのみ実行
+- `/deal:extract_financials [deal_name]` - 財務諸表抽出のみ実行
 
 ## 使用方法
 Cursorのチャットで `/` に続けてコマンド名を入力します。
