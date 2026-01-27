@@ -7,22 +7,16 @@ PEファンド向けのデューデリジェンス（DD）ワークフローをC
 ```
 PE_DD/
 ├── deals/                    # 案件管理ディレクトリ
-│   ├── template/            # 案件テンプレート
 │   └── [deal_name]/         # 案件単位のディレクトリ（動的に追加）
-│       ├── nn/              # Non Name Sheet関連資料（入力）
-│       ├── im/              # Information Memorandum関連資料（入力）
 │       ├── vdr/            # VDR（Virtual Data Room）関連資料
-│       ├── dd_results/      # DD結果（集約管理）
-│       │   ├── nn_dd/      # NN DD結果
-│       │   ├── im_dd/      # IM DD結果
-│       │   ├── lbo_dd/     # LBO DD結果
-│       │   └── additional_dd/ # 追加DD結果
+│       │   ├── nn/         # NN関連VDR資料
+│       │   ├── im/         # IM関連VDR資料
+│       │   └── memo/       # メモ・補足資料
 │       ├── ai_dd_results/  # AIによるDD結果（自動生成）
 │       │   ├── nn_dd/      # AIによるNN DD結果
 │       │   ├── im_dd/      # AIによるIM DD結果
 │       │   └── lbo_dd/     # AIによるLBO DD結果
-│       ├── human_dd_note/  # 人間によるDDノート
-│       └── others/         # その他資料
+│       └── human_dd_note/  # 人間によるDDノート
 │
 ├── agents/                   # エージェント関連ディレクトリ
 │   ├── prompts/             # メタプロンプト集
@@ -34,6 +28,7 @@ PE_DD/
 │   │   ├── im_dd_workflow.md
 │   │   ├── lbo_dd_workflow.md  # LBO DDワークフロー（今後追加予定）
 │   │   └── additional_dd_workflow.md
+│   ├── template_deal/       # 案件テンプレート
 │   └── commands/            # 擬似コマンド定義
 │
 └── dd_logic/                # DDプロセスロジック
@@ -75,7 +70,7 @@ PE_DD/
 ## 🔄 ワークフロー
 
 ### 1. NN DDフロー（Non Name Sheet）
-- **入力**: NN資料（PDF/MDファイル）
+- **入力**: VDR資料（`deals/[deal_name]/vdr/nn/` 配下のPDF/MDファイル）
 - **処理**: 定量・定性情報を基にした評価
   - 評価基準に基づく評価（`dd_logic/nn_dd/criteria/evaluation_criteria.md`）
   - 計算ロジックの適用（数式仕様書を参照）
@@ -84,10 +79,10 @@ PE_DD/
     - ゲート判定（定量ゲート、定性ゲート）
     - 最終判定（見送り/見送りでない）
   - 定量・定性情報を統合した結論の導出
-- **出力**: NN DD結果レポート（`dd_results/nn_dd/report.md`）
+- **出力**: NN DD結果レポート（`deals/[deal_name]/ai_dd_results/nn_dd/report.md`）
 
 ### 2. IM DDフロー（Information Memorandum）
-- **入力**: IM資料（PDF）
+- **入力**: VDR資料（`deals/[deal_name]/vdr/im/` 配下のPDFファイル）
 - **処理**: 定量・定性情報を基にした評価
   - 評価論点に基づく評価（`dd_logic/im_dd/evaluation_points/evaluation_points.md`）
   - DCF分析ロジックの適用（数式仕様書を参照）
@@ -96,10 +91,10 @@ PE_DD/
     - ターミナル・バリュー計算
     - 企業価値（EV）計算
   - 定量・定性情報を統合した結論の導出
-- **出力**: IM DD結果レポート（`dd_results/im_dd/report.md`）
+- **出力**: IM DD結果レポート（`deals/[deal_name]/ai_dd_results/im_dd/report.md`）
 
 ### 3. LBO DDフロー（Leveraged Buyout）
-- **入力**: IM資料（PDF）、財務モデル
+- **入力**: VDR資料（`deals/[deal_name]/vdr/im/` 配下のPDFファイル）、財務モデル
 - **処理**: LBOモデルを構築し、実行判断の意思決定を行う
   - 評価論点に基づく評価（`dd_logic/lbo_dd/evaluation_points/evaluation_points.md`）
   - LBOモデルの構築
@@ -111,7 +106,7 @@ PE_DD/
     - MOIC（Multiple of Invested Capital）の計算
     - キャッシュスイープモデルの構築
   - 定量・定性情報を統合した結論の導出
-- **出力**: LBO DD結果レポート（`dd_results/lbo_dd/report.md`）
+- **出力**: LBO DD結果レポート（`deals/[deal_name]/ai_dd_results/lbo_dd/report.md`）
 
 ### 4. 追加DDフロー
 - **入力**: 人間による議論・追加調査
@@ -119,12 +114,12 @@ PE_DD/
   - 議論テーマの設定
   - 調査・議論の実施
   - 結果の整理
-- **出力**: 追加DD結果（テンプレートに基づく）
+- **出力**: 追加DD結果（`deals/[deal_name]/human_dd_note/` に保存）
 
 ## 🚀 使い方
 
 ### 新規案件の作成
-1. `deals/template/` をコピーして新規案件ディレクトリを作成
+1. `agents/template_deal/` をコピーして新規案件ディレクトリを作成（`deals/[deal_name]/`）
 2. 案件名をディレクトリ名に設定
 3. 各ディレクトリに資料を配置
 

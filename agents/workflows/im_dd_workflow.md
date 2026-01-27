@@ -1,19 +1,27 @@
 # IM DDワークフロー（Information Memorandum）
 
 ## 概要
-Information Memorandum（IM）をPDFとして受け取った際のIM DDフローです。定量情報と定性情報を統合し、一定の結論を導出します。
+Information Memorandum（IM）を基にしたIM DDフローです。定量情報と定性情報を統合し、一定の結論を導出します。
+
+## データソース
+
+IM DD評価に必要なデータは、以下のディレクトリから取得します：
+- **VDR資料**: `deals/[deal_name]/vdr/im/` - IM関連VDR資料（必須）
+- **財務諸表**: VDR資料から抽出した財務諸表データ
+- **事業計画**: VDR資料から抽出した事業計画データ
 
 ## 入力形式
-- PDFファイル（Information Memorandum）
+- VDR資料（PDFファイル等、`deals/[deal_name]/vdr/im/` 配下）
 
 ## 処理ステップ
 
 ### 1. IMの読み込みと解析
-- PDFの読み込み
+- VDR資料の読み込み（`agents/prompts/im_dd/load_im_prompt.md`を使用）
 - 構造化されたデータへの変換
 - 主要セクションの抽出（定量情報・定性情報の識別）
 
 ### 2. IM DD評価の実行
+- IM DD評価の実行（`agents/prompts/im_dd/evaluate_prompt.md`を使用）
 - 評価論点に基づく評価
 - 計算ロジックの適用（定量情報の分析）
 - 定性情報の評価
@@ -23,8 +31,7 @@ Information Memorandum（IM）をPDFとして受け取った際のIM DDフロー
 ### 3. 結果の出力
 - IM DD結果レポートの生成
 - 案件ディレクトリへの保存
-  - レポート: `deals/[deal_name]/dd_results/im_dd/report.md`
-  - 構造化データ: `deals/[deal_name]/dd_results/im_dd/data.json`
+  - レポート: `deals/[deal_name]/ai_dd_results/im_dd/report.md`
 
 ## 評価論点
 詳細は `dd_logic/im_dd/evaluation_points/` を参照

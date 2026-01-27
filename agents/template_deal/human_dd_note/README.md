@@ -30,5 +30,4 @@ DDノートをこのディレクトリに保存します。
 
 ## 関連ディレクトリ
 - **AI DD結果**: `../ai_dd_results/` - AIによるDD評価結果
-- **DD結果**: `../dd_results/` - 人間による最終判断を含むDD結果
 - **ワークフロー定義**: `agents/workflows/additional_dd_workflow.md` - 追加DDワークフロー

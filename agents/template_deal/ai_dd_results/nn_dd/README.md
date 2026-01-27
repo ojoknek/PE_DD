@@ -27,7 +27,7 @@ NN DDでは以下の評価が実施されます：
 ## 使用方法
 
 ### 1. 入力資料の配置
-NN資料を `../../nn/materials/` に配置します。
+NN関連VDR資料を `../../vdr/nn/` に配置します。
 
 ### 2. ワークフローの実行
 NN DDワークフローを実行します。
@@ -44,6 +44,6 @@ NN DDワークフローを実行します。
 - `dd_logic/nn_dd/criteria/evaluation_criteria.md`: NN DD評価基準
 
 ## 関連ディレクトリ
-- **入力資料**: `../nn/` - NN関連資料
+- **入力資料**: `../../vdr/nn/` - NN関連VDR資料
 - **評価ロジック**: `dd_logic/nn_dd/` - NN DD評価ロジック
 - **ワークフロー定義**: `agents/workflows/nn_dd_workflow.md` - NN DDワークフロー

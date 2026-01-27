@@ -30,7 +30,7 @@ IM DDでは以下の評価が実施されます：
 ## 使用方法
 
 ### 1. 入力資料の配置
-IM資料（PDF）を `../../im/materials/` に配置します。
+IM関連VDR資料（PDF）を `../../vdr/im/` に配置します。
 
 ### 2. ワークフローの実行
 IM DDワークフローを実行します。
@@ -47,6 +47,6 @@ IM DDワークフローを実行します。
 - `dd_logic/im_dd/evaluation_points/evaluation_points.md`: IM DD評価論点
 
 ## 関連ディレクトリ
-- **入力資料**: `../im/` - IM関連資料
+- **入力資料**: `../../vdr/im/` - IM関連VDR資料
 - **評価ロジック**: `dd_logic/im_dd/` - IM DD評価ロジック
 - **ワークフロー定義**: `agents/workflows/im_dd_workflow.md` - IM DDワークフロー

@@ -1,10 +1,10 @@
 # IM読み込みプロンプト
 
 ## 目的
-Information Memorandum（IM）をPDF形式で読み込み、構造化されたデータに変換します。
+Information Memorandum（IM）をVDR資料から読み込み、構造化されたデータに変換します。
 
 ## 入力
-- PDFファイル（Information Memorandum）
+- VDR資料（`deals/[deal_name]/vdr/im/` 配下のPDFファイル等）
 
 ## 処理手順
 1. PDFファイルを読み込む

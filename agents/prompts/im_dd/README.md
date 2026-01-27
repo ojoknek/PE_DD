@@ -21,7 +21,12 @@ Information Memorandum（IM）を基にしたIM DD用プロンプト集です。
 
 ### 3. 結果出力プロンプト
 - **用途**: IM DD結果をレポート形式で出力するためのプロンプト
-- **出力先**: `dd_results/im_dd/` または `ai_dd_results/im_dd/`
+- **出力先**: `deals/[deal_name]/ai_dd_results/im_dd/report.md`
+
+## データソース
+
+IM DD評価に必要なデータは、以下のディレクトリから取得します：
+- **VDR資料**: `deals/[deal_name]/vdr/im/` - IM関連VDR資料（必須）
 
 ## 使用方法
 各プロンプトは、対応するワークフローのステップで使用されます。計算ロジックは数式仕様書を参照して、適切な計算式を適用してください。

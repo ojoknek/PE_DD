@@ -3,16 +3,10 @@
 ## 概要
 Non Name Sheet（NN）を受け取った段階での入力資料を管理するディレクトリです。NN資料を基にしたNN DD評価の入力として使用されます。
 
-## ディレクトリ構成
-- `materials/`: 元資料（PDF/Web/mdファイル）
-  - PDFファイル、Web情報（URL）、Markdownファイルなど、各種形式のNN資料を配置
-- `processed/`: 処理済みデータ（構造化されたデータ）
-  - ワークフロー実行時に自動生成される構造化データを保存
-
 ## 使用方法
 
 ### 1. 資料の配置
-NN資料を `materials/` ディレクトリに配置します。
+NN関連VDR資料をこのディレクトリに配置します。
 - PDFファイル
 - Web情報（URL）
 - Markdownファイル（テキスト情報）
@@ -25,8 +19,7 @@ NN DDワークフローを実行します。
 - 計算ロジックは数式仕様書（`dd_logic/nn_dd/calculations/`）を参照
 
 ### 3. 結果の確認
-- 処理済みデータ: `processed/` に保存されます
-- **DD結果**: `../../dd_results/nn_dd/` または `../../ai_dd_results/nn_dd/` に自動生成されます
+- **DD結果**: `../../ai_dd_results/nn_dd/` に自動生成されます
   - `report.md`: NN DD結果レポート（人間が読みやすい形式）
 
 ## 評価内容
@@ -39,6 +32,6 @@ NN DDでは以下の評価が実施されます：
 詳細は `dd_logic/nn_dd/criteria/` を参照してください。
 
 ## 関連ディレクトリ
-- **DD結果**: `../dd_results/nn_dd/` - NN DD評価結果
+- **DD結果**: `../../ai_dd_results/nn_dd/` - NN DD評価結果
 - **評価ロジック**: `dd_logic/nn_dd/` - NN DD評価ロジック
 - **ワークフロー定義**: `agents/workflows/nn_dd_workflow.md` - NN DDワークフロー
