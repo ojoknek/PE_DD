@@ -15,81 +15,167 @@ NN DD評価に使用する計算ロジックです。定量情報と定性情報
 ## 計算項目
 
 ### 1) 中間計算（Derived Metrics）
+
 #### 1-1. ND/EBITDA（レバレッジ）
-- 定義：`nd_to_ebitda = net_debt / adj_ebitda`
-- 条件：`adj_ebitda` が0または未入力の場合、`nd_to_ebitda = null`
+
+$$ND/EBITDA = \frac{Net\ Debt}{Adj\ EBITDA}$$
+
+ここで：
+- $ND/EBITDA$: ND/EBITDA倍率（レバレッジ）
+- $Net\ Debt$: 純有利子負債（有利子負債 - 現預金）
+- $Adj\ EBITDA$: 調整後EBITDA
+
+**計算条件**: $Adj\ EBITDA = 0$ または未入力の場合、$ND/EBITDA = null$（計算不能）
 
 #### 1-2. EV（企業価値）
-- 定義：`ev = adj_ebitda * ebitda_multiple`
-- 条件：`adj_ebitda` または `ebitda_multiple` が未入力の場合、`ev = null`
+
+$$EV = Adj\ EBITDA \times EBITDA\ Multiple$$
+
+ここで：
+- $EV$: 企業価値（Enterprise Value）
+- $Adj\ EBITDA$: 調整後EBITDA
+- $EBITDA\ Multiple$: EBITDA倍率
+
+**計算条件**: $Adj\ EBITDA$ または $EBITDA\ Multiple$ が未入力の場合、$EV = null$（計算不能）
 
 #### 1-3. Equity Value（株主価値）
-- 定義：`equity_value = ev - net_debt`
-- 条件：`ev` がnullの場合、`equity_value = null`
+
+$$Equity\ Value = EV - Net\ Debt$$
+
+ここで：
+- $Equity\ Value$: 株主価値（Equity Value）
+- $EV$: 企業価値（Enterprise Value）
+- $Net\ Debt$: 純有利子負債（未入力の場合は0として扱う）
+
+**計算条件**: $EV = null$ の場合、$Equity\ Value = null$（計算不能）
 
 #### 1-4. 定性合計
-- 定義：`qual_total = fit_score + brand_score + digital_score + scarcity_score`
-- 範囲：4..20
+
+$$Qual\ Total = Fit\ Score + Brand\ Score + Digital\ Score + Scarcity\ Score$$
+
+ここで：
+- $Qual\ Total$: 定性合計スコア（範囲: 4〜20点）
+- $Fit\ Score$: 領域・業態適合度（1〜5点、未入力は0として扱う）
+- $Brand\ Score$: ブランド・独自性（1〜5点、未入力は0として扱う）
+- $Digital\ Score$: ファンベース・D2C（1〜5点、未入力は0として扱う）
+- $Scarcity\ Score$: 特定分野・地域性（1〜5点、未入力は0として扱う）
 
 ---
 
 ### 2) 定量（財務）の離散判定（Discrete Ratings）
+
 #### 2-1. 売上高判定
-- `sales >= 500` → `〇`
-- `300 <= sales < 500` → `△`
-- `sales < 300` → `×`
+
+| 条件 | 判定 |
+|------|------|
+| $sales = null$ | 数値未入力 |
+| $sales \geq 500$ | 〇 |
+| $300 \leq sales < 500$ | △ |
+| $sales < 300$ | × |
+
+ここで：$sales$: 売上高（百万円単位）
 
 #### 2-2. 調整後EBITDA判定
-- `adj_ebitda >= 100` → `◎`
-- `50 <= adj_ebitda < 100` → `〇`
-- `adj_ebitda < 50` → `×`
+
+| 条件 | 判定 |
+|------|------|
+| $adj\_ebitda = null$ | 数値未入力 |
+| $adj\_ebitda \geq 100$ | ◎ |
+| $50 \leq adj\_ebitda < 100$ | 〇 |
+| $adj\_ebitda < 50$ | × |
+
+ここで：$adj\_ebitda$: 調整後EBITDA（百万円単位）
 
 #### 2-3. ND/EBITDA判定
-- `nd_to_ebitda` がnull → `数値未入力`
-- `nd_to_ebitda <= 3` → `◎`
-- `3 < nd_to_ebitda <= 4` → `〇`
-- `nd_to_ebitda > 4` → `×`
+
+| 条件 | 判定 |
+|------|------|
+| $nd\_to\_ebitda = null$ | 数値未入力 |
+| $nd\_to\_ebitda \leq 3$ | ◎ |
+| $3 < nd\_to\_ebitda \leq 4$ | 〇 |
+| $nd\_to\_ebitda > 4$ | × |
 
 #### 2-4. EBITDA倍率判定
-- `ebitda_multiple` が未入力 → `数値未入力`
-- `ebitda_multiple <= 3` → `◎`
-- `3 < ebitda_multiple <= 4` → `〇`
-- `ebitda_multiple > 4` → `×`
+
+| 条件 | 判定 |
+|------|------|
+| $ebitda\_multiple = null$ | 数値未入力 |
+| $ebitda\_multiple \leq 3$ | ◎ |
+| $3 < ebitda\_multiple \leq 4$ | 〇 |
+| $ebitda\_multiple > 4$ | × |
 
 #### 2-5. EV判定（参考：サイズ適合）
-- `ev` がnull → `（空欄）`
-- `1000 <= ev <= 2500` → `〇`
-- 上記以外 → `△`
-- 注：EVは×判定を持たない（ゲート要因にしない）
+
+| 条件 | 判定 |
+|------|------|
+| $ev = null$ | （空欄） |
+| $1000 \leq ev \leq 2500$ | 〇 |
+| 上記以外 | △ |
+
+**注意**: EVは×判定を持たない（ゲート要因にしない）
 
 #### 2-6. Equity Value判定（参考：サイズ適合）
-- `equity_value` がnull → `数値未入力`
-- `300 <= equity_value <= 1500` → `〇`
-- 上記以外 → `△`
-- 注：Equity Valueは×判定を持たない（ゲート要因にしない）
+
+| 条件 | 判定 |
+|------|------|
+| $equity\_value = null$ | 数値未入力 |
+| $300 \leq equity\_value \leq 1500$ | 〇 |
+| 上記以外 | △ |
+
+**注意**: Equity Valueは×判定を持たない（ゲート要因にしない）
 
 ---
 
 ### 3) 定量総合判定（Quant Gate）
-- 定義：定量判定の対象範囲に **×が1つでもある** 場合 `NG`、なければ `OK`
-- 擬似式：
-  - `quant_result = (exists "×") ? NG : OK`
 
----
+$$Quant\ Result = \begin{cases}
+NG & \text{if } \exists rating \in \{sales, adj\_ebitda, nd\_to\_ebitda, ebitda\_multiple\} : rating = \times \\
+OK & \text{otherwise}
+\end{cases}$$
+
+論理式で表現すると：
+
+$$Quant\ Result = \begin{cases}
+NG & \text{if } (sales\_rating = \times) \lor (adj\_ebitda\_rating = \times) \lor (nd\_to\_ebitda\_rating = \times) \lor (ebitda\_multiple\_rating = \times) \\
+OK & \text{otherwise}
+\end{cases}$$
 
 ### 4) 定性判定（Qual Gate）
-- 定義：
-  - `qual_total >= 15` → 合格
-  - `qual_total < 15` → 不合格
 
----
+$$Qual\ Passed = \begin{cases}
+True & \text{if } Qual\ Total \geq 15 \\
+False & \text{if } Qual\ Total < 15
+\end{cases}$$
+
+ここで：
+- $Qual\ Passed$: 定性ゲート合格フラグ（True: 合格、False: 不合格）
+- $Qual\ Total$: 定性合計スコア（4〜20点）
+- 合格基準: 15点以上
 
 ### 5) 最終判定（見送り/見送りでない）
+
 #### 見送り条件（Skip）
-- `skip = (quant_result == NG) OR (qual_total < 15)`
+
+$$Skip = (Quant\ Result = NG) \lor (Qual\ Total < 15)$$
+
+論理式で表現すると：
+
+$$Skip = (Quant\ Result = NG) \lor \neg Qual\ Passed$$
 
 #### 見送りでない条件（Pass）
-- `pass = (quant_result == OK) AND (qual_total >= 15)`
+
+$$Pass = (Quant\ Result = OK) \land (Qual\ Total \geq 15)$$
+
+論理式で表現すると：
+
+$$Pass = (Quant\ Result = OK) \land Qual\ Passed$$
+
+#### 最終判定の決定
+
+$$Final\ Decision = \begin{cases}
+見送り & \text{if } Skip \\
+見送りでない & \text{if } Pass
+\end{cases}$$
 
 ---
 
@@ -98,116 +184,19 @@ NN DD評価に使用する計算ロジックです。定量情報と定性情報
   → 実務上は「情報不足」として別途フラグ管理する設計余地がある
 - EV/Equity Valueはレンジ外でも「△」止まりであり、ゲートでは落ちない（投資サイズ適合の補助チェックという位置づけ）
 
+## 詳細な数式仕様
+
+詳細な数式仕様については、以下のドキュメントを参照してください：
+
+- [nn_dd_calculator.md](nn_dd_calculator.md) - NN DD計算ロジックの数式仕様書
+- [financial_metrics.md](financial_metrics.md) - 財務指標計算の数式仕様書
+- [valuation_metrics.md](valuation_metrics.md) - バリュエーション指標計算の数式仕様書
+
 ## 実装方法
 
-### 基本的な使用方法
+### プロンプトベース実装
 
-NN_DD評価は`nn_dd_calculator.py`の`NNDDCalculator`クラスを使用して実行します。
-
-```python
-from nn_dd_calculator import NNDDCalculator
-
-# インスタンス化
-calc = NNDDCalculator()
-
-# 全計算を一括実行（推奨）
-result = calc.calculate_all(
-    sales=600,              # 売上高（百万円）
-    adj_ebitda=120,         # 調整後EBITDA（百万円）
-    net_debt=300,           # Net Debt（百万円）
-    ebitda_multiple=4.0,    # EBITDA倍率
-    fit_score=4,            # 領域・業態適合度（1〜5点）
-    brand_score=4,          # ブランド・独自性（1〜5点）
-    digital_score=4,        # ファンベース・D2C（1〜5点）
-    scarcity_score=3        # 特定分野・地域性（1〜5点）
-)
-
-# 結果の確認
-print(f"最終判定: {result['final_decision']}")
-print(f"定量ゲート: {result['gate_results']['quantitative']}")
-print(f"定性ゲート: {result['gate_results']['qualitative']}")
-
-# NG理由の確認
-if result['reasoning']['quantitative_ng_reasons']:
-    for reason in result['reasoning']['quantitative_ng_reasons']:
-        print(f"  - {reason}")
-```
-
-### 個別計算メソッド
-
-必要に応じて、個別の計算メソッドも使用できます。
-
-```python
-# 中間計算
-nd_to_ebitda = calc.calculate_nd_to_ebitda(net_debt=300, adj_ebitda=120)
-ev = calc.calculate_ev(adj_ebitda=120, ebitda_multiple=4.0)
-equity_value = calc.calculate_equity_value(ev=480, net_debt=300)
-qual_total = calc.calculate_qualitative_total(4, 4, 4, 3)
-
-# 定量判定
-sales_rating = calc.rate_sales(600)  # Rating.GOOD
-ebitda_rating = calc.rate_adj_ebitda(120)  # Rating.EXCELLENT
-
-# ゲート判定
-quant_result = calc.evaluate_quantitative_gate(
-    sales_rating, ebitda_rating, nd_to_ebitda_rating, multiple_rating
-)
-qual_passed = calc.evaluate_qualitative_gate(qual_total)
-
-# 最終判定
-decision = calc.make_final_decision(quant_result, qual_passed)
-```
-
-### 実装ファイル
-
-#### 1. `nn_dd_calculator.py` - メイン計算モジュール
-README.mdの仕様に完全準拠した計算システム。
-
-**主な機能:**
-- 中間計算（ND/EBITDA、EV、Equity Value、定性合計）
-- 定量判定の離散化（売上高、EBITDA、ND/EBITDA、倍率、EV、Equity Value）
-- 定量総合判定（Quant Gate）
-- 定性判定（Qual Gate）
-- 最終判定（見送り/見送りでない）
-
-**主要メソッド:**
-- `calculate_all()` - 全計算を一括実行（推奨）
-- `calculate_nd_to_ebitda()` - ND/EBITDA計算
-- `calculate_ev()` - EV計算
-- `calculate_equity_value()` - Equity Value計算
-- `calculate_qualitative_total()` - 定性合計計算
-- `rate_sales()`, `rate_adj_ebitda()` 等 - 各項目の判定
-- `evaluate_quantitative_gate()` - 定量ゲート判定
-- `evaluate_qualitative_gate()` - 定性ゲート判定
-- `make_final_decision()` - 最終判定
-
-#### 2. `financial_metrics.py` - 財務指標計算
-包括的な財務指標の計算機能（補助機能）。
-
-**主な機能:**
-- `calculate_cagr()` - CAGR（売上成長率）
-- `calculate_ebitda_margin()` - EBITDAマージン
-- `calculate_operating_margin()` - 営業利益率
-- `calculate_roe()` - ROE（自己資本利益率）
-- `calculate_roa()` - ROA（総資産利益率）
-- `calculate_debt_to_equity_ratio()` - 負債資本比率
-- `calculate_current_ratio()` - 流動比率
-- `calculate_quick_ratio()` - 当座比率
-- `calculate_working_capital()` - 運転資金
-- `calculate_working_capital_turnover()` - 運転資金回転率
-- `calculate_comprehensive_financial_metrics()` - 上記の一括計算
-
-**注意:** このファイルはREADME.mdの仕様には直接含まれていませんが、財務分析の補助機能として提供されています。
-
-#### 3. `valuation_metrics.py` - バリュエーション指標計算
-README.mdの仕様に基づく、NN_DD評価に必要なバリュエーション計算機能。
-
-**主な機能（README.md仕様準拠）:**
-- `calculate_net_debt()` - Net Debt計算（有利子負債−現預金）
-- `calculate_enterprise_value_from_ebitda()` - EV計算（EBITDA倍率から）
-- `calculate_equity_value_from_ev()` - Equity Value計算（EVから）
-
-**注意:** このファイルはREADME.mdの仕様に完全準拠しており、仕様外のメソッドは削除されています。
+計算ロジックは、AI/LLMを使用したプロンプトベースで実装可能です。数式仕様書を参照して、適切な計算式を適用してください。
 
 ## 出力形式
 計算結果は構造化されたJSON形式で出力されます。
@@ -243,48 +232,52 @@ README.mdの仕様に基づく、NN_DD評価に必要なバリュエーション
 }
 ```
 
-## テストと使用例
-
-### テストコード
-```bash
-python3 test_nn_dd_calculator.py
-```
-
-### 使用例
-```bash
-python3 example_usage.py
-```
-
-実践的な使用例が5パターン含まれています：
-1. **見送りでない案件（合格）** - 定量・定性ともに合格したケース
-2. **見送り案件（定量NG）** - 売上高不足などで定量ゲートNG
-3. **見送り案件（定性不合格）** - 定性スコアが15点未満
-4. **包括的な財務分析との統合** - `financial_metrics.py`との連携例
-5. **センシティビティ分析** - EBITDA倍率の変化による影響分析
-
-### テスト結果
-
-全テストが成功しています：
-- ✅ 中間計算のテスト（正常系・異常系）
-- ✅ 定量判定のテスト（全6項目）
-- ✅ ゲート判定のテスト（OK/NGケース）
-- ✅ 最終判定のテスト（4パターン）
-- ✅ 統合計算のテスト（3ケース）
-
 ## ファイル構成
 
 ```
 calculations/
-├── nn_dd_calculator.py          # メイン計算モジュール（README.md仕様完全準拠）
-├── valuation_metrics.py        # バリュエーション計算（README.md仕様準拠）
-├── financial_metrics.py         # 財務指標計算（補助機能）
-├── test_nn_dd_calculator.py     # テストコード
-├── example_usage.py             # 実践的使用例
-├── CHANGELOG.md                  # 改善履歴
-└── README.md                     # このファイル
+├── nn_dd_calculator.md          # NN DD計算ロジックの数式仕様書
+├── financial_metrics.md         # 財務指標計算の数式仕様書
+├── valuation_metrics.md         # バリュエーション指標計算の数式仕様書
+├── CHANGELOG.md                 # 改善履歴
+└── README.md                    # このファイル
 ```
 
+## 参考文献
+- `dd_logic/references/web/壁の道の向こう側/` - 財務モデリングの実践的手法
+  - DCF法による企業価値評価の基礎
+  - 財務諸表の分析手法
+  - バリュエーション分析の実務
+- `dd_logic/EVALUATION_POINTS_README.md` - 評価論点管理システム
+- `dd_logic/nn_dd/criteria/evaluation_criteria.md` - NN DD評価基準
+
+## 補足説明
+
+### EBITDAの定義
+NN DDでは、調整後EBITDAを使用します。IM DDと同様に、以下の3つのCを満たす利益をカウントします：
+- **Core**: その会社の本業からの収益であること
+- **Continuing**: その事業が継続していること
+- **Controlled**: その事業を支配していること
+
+### Net Debtの計算
+```
+Net Debt = 有利子負債 - 現預金
+```
+- 有利子負債: 短期借入金、長期借入金、社債等
+- 現預金: 現金及び預金、短期有価証券等
+
+### バリュエーション指標の補足
+- **EV（企業価値）**: 調整後EBITDA × EBITDA倍率
+- **Equity Value（株主価値）**: EV - Net Debt
+- これらの指標は投資サイズ適合の補助チェックとして使用され、ゲート要因ではありません
+
 ## 改善履歴
+
+### 2026年1月27日 - 参考文献に基づく精緻化
+- ✅ 参考文献の内容を反映した補足説明の追加
+- ✅ EBITDAの定義（3つのC）の明確化
+- ✅ Net Debt計算の詳細説明
+- ✅ バリュエーション指標の補足説明
 
 ### 2026年1月22日 - 最終整理
 - ✅ README.mdの仕様に完全準拠した実装

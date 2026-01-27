@@ -17,20 +17,21 @@ Cursorで使用する擬似スラッシュコマンドの定義です。
 - `/im_dd:evaluate` - IM DD評価の実行
 - `/im_dd:report` - 結果レポートの生成
 
-### 追加DD関連
-- `/additional_dd:init` - 追加DDの初期化
-- `/additional_dd:discuss` - 議論テーマの設定
-- `/additional_dd:investigate` - 調査の実施
-- `/additional_dd:report` - 結果レポートの生成
+### LBO DD関連
+- `/lbo_dd:init` - LBO DDの初期化
+- `/lbo_dd:build_model` - LBOモデルの構築
+- `/lbo_dd:calculate` - LBO計算の実行
+- `/lbo_dd:evaluate` - 実行判断の評価
+- `/lbo_dd:report` - 結果レポートの生成
 
 ### 案件管理関連
 - `/deal:create` - 新規案件の作成
 - `/deal:list` - 案件一覧の表示
 - `/deal:open` - 案件の開く
-- `/deal:process [deal_name]` - 案件の自動処理（NN DD + IM DD）
+- `/deal:process [deal_name]` - 案件の自動処理（NN DD + IM DD + LBO DD）
 - `/deal:process_nn [deal_name]` - NN DDのみ実行
 - `/deal:process_im [deal_name]` - IM DDのみ実行
-- `/deal:extract_financials [deal_name]` - 財務諸表抽出のみ実行
+- `/deal:process_lbo [deal_name]` - LBO DDのみ実行
 
 ## 使用方法
 Cursorのチャットで `/` に続けてコマンド名を入力します。
