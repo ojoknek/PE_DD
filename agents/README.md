@@ -3,6 +3,20 @@
 ## 概要
 エージェント関連のプログラムや案件DD・ロジックを指南するプロンプト関連をまとめたディレクトリです。AI/LLMを使用したプロンプトベースでDDプロセスを実行するためのリソースを提供します。
 
+## Cursor SKILLS（推奨）
+
+本リポジトリのDD機能は **Cursor SKILLS形式** で `.cursor/skills/` に登録されています。Cursor上で以下のスキルが自動適用されます。
+
+| スキル名 | 説明 | トリガー例 |
+|----------|------|------------|
+| `pe-dd-nn` | NN DD（Non Name Sheet）の実行 | NN DD、vdr/nn、Non Name |
+| `pe-dd-im` | IM DD（Information Memorandum）の実行 | IM DD、vdr/im、IM評価 |
+| `pe-dd-lbo` | LBO DD（モデル構築・実行判断）の実行 | LBO DD、LBOモデル、IRR/MOIC |
+| `pe-dd-deal` | 案件作成・一覧・DD一括実行 | 新規案件、deal:create、deal:process |
+
+- スキル定義: `.cursor/skills/pe-dd-*/SKILL.md`
+- 各スキルは `agents/prompts/` および `agents/workflows/` の内容を参照する形で動作します。
+
 ## ディレクトリ構成
 
 ### prompts/
@@ -39,4 +53,6 @@
 - Cursorで使用する擬似スラッシュコマンドの定義
 
 ## 使用方法
-各ワークフローに従って、対応するプロンプトを使用します。計算ロジックは数式仕様書（`dd_logic/`配下）を参照して、適切な計算式を適用してください。
+
+- **Cursor利用時**: 上記SKILLSが有効なため、「NN DDを実行して」「この案件でLBO DDして」などと依頼すると、対応するスキルに従ってワークフローが実行されます。
+- **手動参照時**: 各ワークフロー（`workflows/`）に従い、対応するプロンプト（`prompts/`）を使用します。計算ロジックは数式仕様書（`dd_logic/`配下）を参照して適用してください。
