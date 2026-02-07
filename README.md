@@ -205,7 +205,7 @@ PE_DD/
 
 ## 📚 参考リポジトリ
 
-本リポジトリは [DD_template](https://github.com/ojoknek/DD_template) を参考に作成されています。
+本リポジトリは [VC_DD](https://github.com/ojoknek/VC_DD) を参考に作成されています。
 
 ## 📦 インストール
 
