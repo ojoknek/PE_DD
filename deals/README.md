@@ -19,9 +19,10 @@ deals/
 ```
 
 ## 新規案件の作成
-1. `agents/template_deal/` をコピーして新規案件ディレクトリを作成（`deals/[deal_name]/`）
+1. `dd_logic/template_deal/` をコピーして新規案件ディレクトリを作成（`deals/[deal_name]/`）
 2. 案件名をディレクトリ名に設定
 3. 各ディレクトリに資料を配置
+4. ワークフロー・プロンプトは `.cursor/skills/` を参照（pe-dd-nn, pe-dd-im, pe-dd-lbo, pe-dd-deal）。テンプレートは `dd_logic/template_deal/`。
 
 ## DDプロセスの実行
 - **NN DD**: VDR資料を `vdr/nn/` に配置後、NN DDワークフローを実行

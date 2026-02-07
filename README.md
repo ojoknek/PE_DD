@@ -18,20 +18,14 @@ PE_DD/
 │       │   └── lbo_dd/     # AIによるLBO DD結果
 │       └── human_dd_note/  # 人間によるDDノート
 │
-├── agents/                   # エージェント関連ディレクトリ
-│   ├── prompts/             # メタプロンプト集
-│   │   ├── nn_dd/          # NN DD用プロンプト
-│   │   ├── im_dd/          # IM DD用プロンプト
-│   │   └── lbo_dd/         # LBO DD用プロンプト（今後追加予定）
-│   ├── workflows/           # ワークフロー定義
-│   │   ├── nn_dd_workflow.md
-│   │   ├── im_dd_workflow.md
-│   │   ├── lbo_dd_workflow.md  # LBO DDワークフロー（今後追加予定）
-│   │   └── additional_dd_workflow.md
-│   ├── template_deal/       # 案件テンプレート
-│   └── commands/            # 擬似コマンド定義
+├── .cursor/skills/           # Cursorスキル（ワークフロー・プロンプト・コマンド）
+│   ├── pe-dd-nn/            # NN DDスキル（prompts/, workflow.md）
+│   ├── pe-dd-im/            # IM DDスキル（prompts/, workflow.md）
+│   ├── pe-dd-lbo/           # LBO DDスキル（prompts/, workflow.md）
+│   └── pe-dd-deal/          # 案件管理・DD一括実行（commands.md）
 │
 └── dd_logic/                # DDプロセスロジック
+    ├── template_deal/       # 案件テンプレート（新規案件作成時にコピー元）
     ├── nn_dd/               # NN DDロジック
     │   ├── criteria/        # 評価基準
     │   │   └── evaluation_criteria.md
@@ -119,7 +113,7 @@ PE_DD/
 ## 🚀 使い方
 
 ### 新規案件の作成
-1. `agents/template_deal/` をコピーして新規案件ディレクトリを作成（`deals/[deal_name]/`）
+1. `dd_logic/template_deal/` をコピーして新規案件ディレクトリを作成（`deals/[deal_name]/`）
 2. 案件名をディレクトリ名に設定
 3. 各ディレクトリに資料を配置
 
@@ -167,11 +161,12 @@ PE_DD/
 
 ## 📚 主要ファイル
 
-### ワークフロー定義
-- `agents/workflows/nn_dd_workflow.md`: NN DDワークフロー
-- `agents/workflows/im_dd_workflow.md`: IM DDワークフロー
-- `agents/workflows/lbo_dd_workflow.md`: LBO DDワークフロー（今後追加予定）
-- `agents/workflows/additional_dd_workflow.md`: 追加DDワークフロー
+### ワークフロー・プロンプト（Cursor Skills）
+- `.cursor/skills/pe-dd-nn/workflow.md`: NN DDワークフロー（プロンプト: `prompts/`）
+- `.cursor/skills/pe-dd-im/workflow.md`: IM DDワークフロー（プロンプト: `prompts/`）
+- `.cursor/skills/pe-dd-lbo/workflow.md`: LBO DDワークフロー（プロンプト: `prompts/`）
+- `.cursor/skills/pe-dd-deal/commands.md`: 擬似コマンド一覧
+- 詳細: `.cursor/skills/README.md`
 
 ### 評価基準・論点
 - `dd_logic/nn_dd/criteria/evaluation_criteria.md`: NN DD評価基準
@@ -193,9 +188,9 @@ PE_DD/
 - `dd_logic/evaluation_points.md`: 評価論点フレームワークの仕様書
 
 ### プロンプト
-- `agents/prompts/nn_dd/`: NN DD用プロンプト
-- `agents/prompts/im_dd/`: IM DD用プロンプト
-- `agents/prompts/lbo_dd/`: LBO DD用プロンプト（今後追加予定）
+- `.cursor/skills/pe-dd-nn/prompts/`: NN DD用プロンプト
+- `.cursor/skills/pe-dd-im/prompts/`: IM DD用プロンプト
+- `.cursor/skills/pe-dd-lbo/prompts/`: LBO DD用プロンプト
 
 ### 参考文献
 - `dd_logic/references/`: PEファンドDDロジックに関する文献

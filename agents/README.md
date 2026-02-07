@@ -1,58 +1,29 @@
-# エージェント関連ディレクトリ
+# agents/ ディレクトリ（廃止予定）
 
-## 概要
-エージェント関連のプログラムや案件DD・ロジックを指南するプロンプト関連をまとめたディレクトリです。AI/LLMを使用したプロンプトベースでDDプロセスを実行するためのリソースを提供します。
+## 状態
+**本ディレクトリの内容は `.cursor/skills/` および `dd_logic/template_deal/` に移管済みです。**  
+参照がすべて移行先を指すよう更新済みのため、**このディレクトリは削除して問題ありません。**
 
-## Cursor SKILLS（推奨）
+## 移管先
 
-本リポジトリのDD機能は **Cursor SKILLS形式** で `.cursor/skills/` に登録されています。Cursor上で以下のスキルが自動適用されます。
+| 旧パス（agents/） | 移管先 |
+|-------------------|--------|
+| `agents/prompts/nn_dd/` | `.cursor/skills/pe-dd-nn/prompts/` |
+| `agents/prompts/im_dd/` | `.cursor/skills/pe-dd-im/prompts/` |
+| `agents/prompts/lbo_dd/` | `.cursor/skills/pe-dd-lbo/prompts/` |
+| `agents/workflows/*.md` | 各スキル配下の `.cursor/skills/pe-dd-*/workflow.md` |
+| `agents/commands/README.md` | `.cursor/skills/pe-dd-deal/commands.md` |
+| `agents/template_deal/` | **`dd_logic/template_deal/`** |
 
-| スキル名 | 説明 | トリガー例 |
-|----------|------|------------|
-| `pe-dd-nn` | NN DD（Non Name Sheet）の実行 | NN DD、vdr/nn、Non Name |
-| `pe-dd-im` | IM DD（Information Memorandum）の実行 | IM DD、vdr/im、IM評価 |
-| `pe-dd-lbo` | LBO DD（モデル構築・実行判断）の実行 | LBO DD、LBOモデル、IRR/MOIC |
-| `pe-dd-deal` | 案件作成・一覧・DD一括実行 | 新規案件、deal:create、deal:process |
+## 削除方法
+プロジェクトルートで以下を実行すると、agents/ を削除できます。
 
-- スキル定義: `.cursor/skills/pe-dd-*/SKILL.md`
-- 各スキルは `agents/prompts/` および `agents/workflows/` の内容を参照する形で動作します。
+```bash
+rm -rf agents/
+```
 
-## ディレクトリ構成
+削除前に、`dd_logic/template_deal/` が存在することを確認してください（移管済み）。
 
-### prompts/
-メタプロンプト集
-- `nn_dd/`: NN DD用プロンプト
-  - `load_materials_prompt.md`: 資料読み込みプロンプト
-  - `evaluate_prompt.md`: NN DD評価プロンプト
-  - `README.md`: NN DD用プロンプトの説明
-- `im_dd/`: IM DD用プロンプト
-  - `load_im_prompt.md`: IM読み込みプロンプト
-  - `evaluate_prompt.md`: IM DD評価プロンプト
-  - `README.md`: IM DD用プロンプトの説明
-- `lbo_dd/`: LBO DD用プロンプト
-  - `load_vdr_prompt.md`: VDR資料読み込みプロンプト
-  - `build_lbo_model_prompt.md`: LBOモデル構築プロンプト
-  - `evaluate_lbo_prompt.md`: LBO DD評価プロンプト
-  - `README.md`: LBO DD用プロンプトの説明
-
-### workflows/
-ワークフロー定義
-- `nn_dd_workflow.md`: NN DDワークフロー
-- `im_dd_workflow.md`: IM DDワークフロー
-- `lbo_dd_workflow.md`: LBO DDワークフロー
-
-### template_deal/
-案件テンプレート
-- 新規案件を作成する際のテンプレートディレクトリ
-- `agents/template_deal/` をコピーして `deals/[deal_name]/` を作成
-- 詳細: `template_deal/README.md` を参照
-
-### commands/
-擬似コマンド定義
-- `README.md`: コマンド一覧と使用方法
-- Cursorで使用する擬似スラッシュコマンドの定義
-
-## 使用方法
-
-- **Cursor利用時**: 上記SKILLSが有効なため、「NN DDを実行して」「この案件でLBO DDして」などと依頼すると、対応するスキルに従ってワークフローが実行されます。
-- **手動参照時**: 各ワークフロー（`workflows/`）に従い、対応するプロンプト（`prompts/`）を使用します。計算ロジックは数式仕様書（`dd_logic/`配下）を参照して適用してください。
+## 参照
+- スキル・ワークフロー・プロンプト: `.cursor/skills/README.md`
+- 案件テンプレート: `dd_logic/template_deal/README.md`
