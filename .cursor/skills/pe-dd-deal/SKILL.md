@@ -34,8 +34,10 @@ description: Manages PE deal folders and DD execution. Creates new deals from te
 - **NN DD / IM DD / LBO DD を実行する前に**、当該案件の `vdr/nn/` および `vdr/im/` を走査する
 - 各フォルダ内の **PDF について**、同じフォルダに `{PDFのベース名}_page0001.png` が **無ければ** 未変換とみなす
 - 未変換の PDF には、以下を **執行する**
-  - `program/pdf_table_extractor.py` を実行する（出力先指定なし＝PDF と同じフォルダに PNG を保存）
-  - 未変換のみ変換したい場合は `--ensure` オプションを付与: `python program/pdf_table_extractor.py <PDFパス> --ensure`
+  - **PDF→PNG は `/program` 配下の venv で実行する**（`program/venv/bin/python` を使用）
+  - 実行例: `program/venv/bin/python program/pdf_table_extractor.py <PDFパス> --ensure`
+  - 出力先指定なし＝PDF と同じフォルダに PNG を保存
+  - 未変換のみ変換する場合は `--ensure` オプションを付与
 - 既に `_page0001.png` が存在する PDF はスキップしてよい
 - 上記の変換処理を終えてから、NN DD → IM DD → LBO DD の各ワークフローを実行する
 

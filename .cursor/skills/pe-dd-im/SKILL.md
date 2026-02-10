@@ -12,6 +12,12 @@ description: Runs IM DD (Information Memorandum) workflow for PE deals. Loads IM
 ## データソース
 - **VDR**: `deals/[deal_name]/vdr/im/`（PDF等）
 
+## 実行前: PDF→PNG変換
+- **IM DD を実行する前に**、当該案件の `vdr/im/` を走査し、未変換のPDFをPNGに変換する
+- **PDF→PNG は `/program` 配下の venv で実行する**（`program/venv/bin/python` を使用）
+- 実行例: `program/venv/bin/python program/pdf_table_extractor.py <PDFパス> --ensure`
+- 詳細: `.cursor/skills/pe-dd-deal/SKILL.md` の「DD実行前: PDF→PNG変換」を参照
+
 ## ワークフロー
 
 ### 1. IMの読み込みと解析

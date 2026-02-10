@@ -13,6 +13,11 @@ IM DD評価に必要なデータは、以下のディレクトリから取得し
 ## 入力形式
 - VDR資料（PDFファイル等、`deals/[deal_name]/vdr/im/` 配下）
 
+## 実行前: PDF→PNG変換
+- **IM DD の処理ステップを開始する前に**、当該案件の `vdr/im/` 内のPDFについて、同じフォルダに `{PDFのベース名}_page0001.png` が無ければ未変換とみなす
+- 未変換のPDFには **`/program` 配下の venv で** PDF→PNG を実行する: `program/venv/bin/python program/pdf_table_extractor.py <PDFパス> --ensure`
+- 変換完了後に IM の読み込み・評価に進む
+
 ## 処理ステップ
 
 ### 1. IMの読み込みと解析
