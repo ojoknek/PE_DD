@@ -8,17 +8,24 @@ PDFの全ページをPNG画像として書き出すプログラムです。
 
 ## セットアップ
 
-### 1. 仮想環境の有効化（`program` ディレクトリ内）
+### 1. 仮想環境（`program/venv`）
+
+DD実行時は **`program/venv`** を使用する（`.cursor/skills/pe-dd-deal/SKILL.md` および `pe-dd-im` の仕様）。
+
+初回セットアップ:
 
 ```bash
 cd program
+python3 -m venv venv
 
 # macOS/Linux
-source .venv/bin/activate
+source venv/bin/activate
 
 # Windows (PowerShell)
-.\.venv\Scripts\Activate.ps1
+.\venv\Scripts\Activate.ps1
 ```
+
+既存の `.venv` を使う場合も同様に有効化する。
 
 ### 2. 依存パッケージのインストール
 
@@ -79,10 +86,11 @@ python pdf_table_extractor.py input.pdf --start 1 --end 10
 
 ### PE DDプロセスでの利用
 
-DD実行時、案件の `vdr/nn/` および `vdr/im/` 内のPDFのうち、**まだPNGに変換されていないもの**（同じフォルダに `{PDF名}_page0001.png` が無いもの）について、本プログラムを実行する。
+**PDF→PNG は `/program` 配下の venv で実行する**（仕様）。DD実行時は `program/venv/bin/python` を使用する。
 
-- 未変換のPDFのみ変換したい場合: `--ensure` を付けて実行する  
-  `python pdf_table_extractor.py <PDFパス> --ensure`
+- 実行例: `program/venv/bin/python program/pdf_table_extractor.py <PDFパス> --ensure`
+- DD実行時、案件の `vdr/nn/` および `vdr/im/` 内のPDFのうち、**まだPNGに変換されていないもの**（同じフォルダに `{PDF名}_page0001.png` が無いもの）について、上記の通り本プログラムを実行する
+- 未変換のPDFのみ変換したい場合: `--ensure` を付けて実行する
 - 実行後、PNGは元のPDFがあるフォルダに保存される（出力先指定なし）
 - 詳細な手順は `.cursor/skills/pe-dd-deal/SKILL.md` の「DD実行前: PDF→PNG変換」を参照
 
